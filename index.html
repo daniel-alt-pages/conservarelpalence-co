@@ -1,0 +1,848 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Conservar Palenque - Protegiendo saberes ancestrales</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --green-500: #0b6b3a;
+            --green-400: #10a37f;
+            --earth-200: #efe6dd;
+            --earth-400: #b08968;
+            --accent: #6b8e23;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html, body {
+            font-family: 'Nunito', sans-serif;
+            background: #fff;
+            color: #123;
+            line-height: 1.7; /* Aumentado para más espacio */
+            scroll-behavior: smooth; /* <-- IMPORTANTE: Esto hace suave el scroll al hacer clic en los enlaces del menú */
+            font-size: 17px; /* Aumentamos el tamaño de fuente base */
+        }
+        /* Hacemos que los 'a' y 'button' con cursor pointer sean consistentes */
+        a, button, [role="button"] {
+            cursor: pointer;
+        }
+        a {
+            color: var(--green-500);
+            text-decoration: none;
+        }
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(90deg, var(--earth-200), #f7f8f6);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+            z-index: 100;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-weight: 800;
+            font-size: 20px;
+            color: var(--green-500);
+        }
+        nav a {
+            margin-left: 18px;
+            font-weight: 600;
+            color: var(--green-500);
+            transition: color 0.3s;
+        }
+        nav a:hover {
+            color: var(--green-400);
+        }
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            padding: 10px; /* Hacemos el área de click más grande */
+        }
+        .menu-toggle span {
+            width: 25px;
+            height: 3px;
+            background-color: var(--green-500);
+            transition: 0.3s;
+        }
+        /* Mejoras de accesibilidad para el menú hamburguesa */
+        .menu-toggle.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+        .menu-toggle.active span:nth-child(2) {
+            opacity: 0;
+        }
+        .menu-toggle.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -5px);
+        }
+        
+        .hero {
+            position: relative; 
+            /* (Mejora 4) - Restauramos el fondo de imagen de alta calidad (más estable que el video) */
+            background: linear-gradient(120deg, rgba(11, 107, 58, 0.9), rgba(16, 163, 127, 0.9)), 
+                        url('https://images.unsplash.com/photo-1507291771701-b892f3d60c26?ixlib=rb-4.0.3&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1600&fit=max') 
+                        no-repeat center center;
+            background-size: cover;
+            color: white;
+            padding: 100px 20px 120px;
+            border-bottom-left-radius: 28px;
+            border-bottom-right-radius: 28px;
+            padding-top: 184px; /* Añadimos padding-top para compensar el header fijo */
+            overflow: hidden; 
+        }
+
+        .hero h1, .hero p, .hero .btn {
+            position: relative; /* Asegura que el contenido esté sobre el video */
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: 42px;
+            margin: 0 0 16px;
+            animation: slideInLeft 0.8s ease-out;
+        }
+        .hero p {
+            font-size: 18px;
+            margin-bottom: 22px;
+            max-width: 720px;
+            animation: slideInLeft 1s ease-out;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 16px;
+            border-radius: 10px;
+            background: var(--green-500);
+            color: white;
+            font-weight: 700;
+            box-shadow: 0 6px 14px rgba(11,107,58,0.18);
+            transition: transform .18s, filter .18s;
+            border: none;
+            font-family: 'Nunito', sans-serif;
+        }
+        .btn:hover {
+            transform: translateY(-3px);
+            filter: brightness(1.04);
+        }
+        .btn-secondary {
+            background: var(--earth-400);
+        }
+        section {
+            padding: 28px 20px 40px;
+        }
+
+        /* Añadimos padding-top a las secciones ancla para compensar el header fijo */
+        section[id] {
+            padding-top: 112px; /* 84px del header + 28px del padding original */
+            margin-top: -84px; /* Ajuste para que el scroll sea preciso */
+        }
+
+        .section-title {
+            color: var(--green-500);
+            font-size: 34px;
+            margin-bottom: 18px;
+        }
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 18px;
+            box-shadow: 0 6px 18px rgba(16,16,16,0.06);
+            transition: transform .28s ease, box-shadow .28s ease;
+        }
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 18px 36px rgba(3,22,12,0.08);
+        }
+        /* Añadimos cursor pointer a los items de la galería para indicar que son clickables */
+        .gallery-item {
+            cursor: pointer;
+        }
+        
+        /* (Mejora 3) - Estilo para los iconos en las tarjetas de Estrategias */
+        .card h3 {
+            display: flex;
+            align-items: center;
+            gap: 10px; /* Espacio entre el icono y el texto */
+            margin-top: 0;
+            color: var(--green-500);
+        }
+        .card h3[style*="color:var(--green-500)"] { /* Selector más específico para sobrescribir */
+             color: var(--green-500) !important;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 18px;
+            margin-top: 18px;
+        }
+        .muted {
+            color: #555;
+        }
+        .info-box {
+            background: #f0f7f4;
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 4px solid var(--green-500);
+            margin: 18px 0;
+        }
+        input, textarea {
+            font-family: 'Nunito', sans-serif;
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+        textarea {
+            resize: vertical;
+        }
+        .card img {
+            transition: transform .3s ease, filter .3s ease;
+            width: 100%; /* Aseguramos que la imagen llene la tarjeta */
+            height: 220px;
+            object-fit: cover;
+            background-color: #eee; /* Color de fondo mientras carga la imagen */
+        }
+        .card:hover img {
+            transform: scale(1.05);
+            filter: brightness(0.95);
+        }
+        footer {
+            background: #123;
+            padding: 28px;
+            color: #fff;
+            margin-top: 40px;
+            text-align: center;
+        }
+        
+        /* --- ESTILOS PARA EL MODAL DE GALERÍA (Mejora 2) --- */
+        .modal-overlay {
+            display: none; /* Oculto por defecto */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.75); /* Fondo oscuro semitransparente */
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            animation: fadeIn 0.3s ease; /* Usamos la animación que ya tenías */
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            max-width: 600px;
+            width: 100%;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: -15px;
+            right: -15px;
+            background: white;
+            color: #333;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            font-size: 20px;
+            font-weight: 700;
+            line-height: 30px;
+            text-align: center;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        
+        #modal-img {
+            width: 100%;
+            height: auto;
+            max-height: 70vh; /* Límite de altura para la imagen */
+            object-fit: cover;
+            border-radius: 8px;
+            background-color: #f0f0f0; /* Color de fondo mientras carga */
+        }
+        
+        #modal-caption {
+            margin-top: 15px;
+            color: #333;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+        /* --- FIN ESTILOS MODAL --- */
+
+        /* (NUEVO) --- ESTILOS PARA ANIMACIÓN DE SCROLL --- */
+        .fade-in-section {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .fade-in-section.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        /* --- FIN ESTILOS ANIMACIÓN --- */
+
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        @media (max-width: 768px) {
+            nav .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%; /* Se posiciona justo debajo del header */
+                left: 0;
+                right: 0;
+                background: var(--earth-200);
+                flex-direction: column;
+                padding: 1rem;
+                box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            }
+            nav .nav-links.active {
+                display: flex;
+            }
+            nav .nav-links a {
+                margin: 8px 0;
+            }
+            .menu-toggle {
+                display: flex;
+            }
+            .hero {
+                padding-top: 112px; /* Ajuste para móvil */
+            }
+            .hero h1 {
+                font-size: 28px;
+            }
+            .hero p {
+                font-size: 16px;
+            }
+            /* Hacemos que el grid de contacto sea de una sola columna en móviles */
+            #contact-grid {
+                grid-template-columns: 1fr;
+            }
+
+            /* Ajustes del modal en móviles */
+            .modal-content {
+                padding: 15px;
+            }
+            .modal-close {
+                top: 10px;
+                right: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <nav class="container">
+            <a href="#inicio" class="logo">Conservar Palenque</a>
+            
+            <div class="menu-toggle" id="menu-toggle" role="button" aria-label="Abrir menú" aria-expanded="false">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            
+            <div class="nav-links" id="nav-links">
+                <a href="#inicio">Inicio</a>
+                <a href="#problematica">Problemática</a>
+                <a href="#estrategias">Estrategias</a>
+                <a href="#participa">Participa</a>
+                <a href="#galeria">Galería</a>
+                <a href="#contacto">Contacto</a>
+            </div>
+        </nav>
+    </header>
+
+    <div class="hero" id="inicio">
+        <!-- El fondo ahora es una imagen CSS, se eliminó el <video> -->
+        <div class="container">
+            <h1>Protegiendo la Biodiversidad y los Saberes Ancestrales</h1>
+            <p>San Basilio de Palenque enfrenta retos ambientales que amenazan la disponibilidad de plantas medicinales y la transmisión de la medicina tradicional. Este proyecto propone estrategias participativas para conservar la bioculturalidad del territorio.</p>
+            <a href="#estrategias" class="btn" style="margin-right:10px">Ver estrategias</a>
+            <a href="#participa" class="btn btn-secondary">Cómo participar</a>
+        </div>
+    </div>
+    
+    <section>
+        <div class="container">
+            <h2 class="section-title fade-in-section">Sobre el proyecto</h2>
+            <div class="info-box fade-in-section">
+                <h3 style="color:var(--green-500);margin-bottom:10px">Análisis del impacto de la degradación ambiental en las prácticas ancestrales de la comunidad de San Basilio de Palenque</h3>
+                <p class="muted">Analizar cómo la degradación ambiental afecta las prácticas ancestrales, especialmente la medicina tradicional palenquera.</p>
+            </div>
+
+            <h3 class="section-title fade-in-section" style="color:var(--green-500);margin:40px 0 20px">Equipo de investigación</h3>
+            <div class="grid fade-in-section">
+                <div class="card"><h4 style="margin:0">Ricardo Padilla Michelle Adriana</h4></div>
+                <div class="card"><h4 style="margin:0">Álvarez Sotomayor Mariángel</h4></div>
+                <div class="card"><h4 style="margin:0">Velásquez Correa José Daniel</h4></div>
+                <div class="card"><h4 style="margin:0">Ramos Garces Mar Solayre</h4></div>
+                <div class="card"><h4 style="margin:0">Benítez Morales Mauren Sofía</h4></div>
+            </div>
+
+            <div class="card fade-in-section" style="margin-top:28px">
+                <h3 style="color:var(--green-500);margin-top:0">Introducción</h3>
+                <p class="muted">San Basilio de Palenque es una comunidad afrodescendiente con fuerte tradición ancestral, ubicada en Bolívar, Colombia. La degradación ambiental amenaza la disponibilidad de plantas medicinales y la continuidad de la medicina tradicional palenquera.</p>
+                <p class="muted" style="margin-top:12px"><strong>📍 Ubicación:</strong> Corregimiento de Mahates, Bolívar. Ecosistema de bosque seco tropical.</p>
+                
+                <!-- (NUEVO) Mapa de Google Maps incrustado -->
+                <div class="fade-in-section" style="margin-top: 20px; border-radius: 12px; overflow: hidden;">
+                    <iframe 
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15707.03932824058!2d-75.1986431!3d10.1030508!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e580e0138138e35%3A0x626c3f68d37426a8!2sSan%20Basilio%20de%20Palenque%2C%20Mahates%2C%20Bol%C3%ADvar%2C%20Colombia!5e0!3m2!1ses!2sus!4v1731138981442!5m2!1ses!2sus" 
+                        width="100%" 
+                        height="400" 
+                        style="border:0;" 
+                        allowfullscreen="" 
+                        loading="lazy" 
+                        referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="problematica">
+        <div class="container">
+            <h1 class="section-title fade-in-section">Problemática Ambiental en San Basilio de Palenque</h1>
+            <p class="muted fade-in-section">La comunidad enfrenta deforestación, contaminación de fuentes hídricas y pérdida de biodiversidad que afectan las prácticas de medicina tradicional.</p>
+            
+            <div class="grid fade-in-section">
+                <div class="card">
+                    <h3 style="margin-top:0">Causas</h3>
+                    <ul class="muted">
+                        <li>Tala indiscriminada y cambio en el uso del suelo.</li>
+                        <li>Manejo inadecuado de residuos y vertimientos.</li>
+                        <li>Turismo no regulado y presión sobre recursos.</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3 style="margin-top:0">Efectos</h3>
+                    <ul class="muted">
+                        <li>Reducción de especies medicinales.</li>
+                        <li>Limitación de la transmisión intergeneracional.</li>
+                        <li>Impacto en la salud comunitaria.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div style="margin-top:22px" class="card fade-in-section">
+                <h3 style="color:var(--green-500);margin-top:0">Árbol del problema</h3>
+                <div style="background:linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);padding:20px;border-radius:10px;margin-top:12px">
+                    <div style="text-align:center;margin-bottom:16px">
+                        <h4 style="color:var(--green-500)">🌳 Efectos</h4>
+                        <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center">
+                            <span style="background:white;padding:8px 16px;border-radius:20px;font-size:14px">Pérdida de vegetación</span>
+                            <span style="background:white;padding:8px 16px;border-radius:20px;font-size:14px">Debilitamiento cultural</span>
+                            <span style="background:white;padding:8px 16px;border-radius:20px;font-size:14px">Desequilibrio ecológico</span>
+                        </div>
+                    </div>
+                    <div style="text-align:center;margin:20px 0">
+                        <span style="background:#ffebee;padding:12px 24px;border-radius:25px;font-weight:700;font-size:18px;color:#c62828">🔴 Degradación ambiental</span>
+                    </div>
+                    <div style="text-align:center">
+                        <h4 style="color:var(--green-500)">🌱 Causas</h4>
+                        <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center">
+                            <span style="background:white;padding:8px 16px;border-radius:20px;font-size:14px">Deforestación</span>
+                            <span style="background:white;padding:8px 16px;border-radius:20px;font-size:14px">Contaminación</span>
+                            <span style="background:white;padding:8px 16px;border-radius:20px;font-size:14px">Falta de educación ambiental</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-box fade-in-section" style="margin-top:22px">
+                <h4 style="color:var(--green-500);margin-bottom:10px">❓ Pregunta central de investigación</h4>
+                <p>¿Cómo afecta la degradación ambiental la disponibilidad de plantas medicinales y la preservación de la medicina tradicional?</p>
+            </div>
+
+            <h3 class="section-title fade-in-section" style="color:var(--green-500);margin:28px 0 18px">Objetivos específicos</h3>
+            <div class="grid fade-in-section">
+                <div class="card">
+                    <h3 style="color:var(--green-500)">1</h3>
+                    <p class="muted">Identificar causas de degradación</p>
+                </div>
+                <div class="card">
+                    <h3 style="color:var(--green-500)">2</h3>
+                    <p class="muted">Examinar efectos sobre plantas medicinales</p>
+                </div>
+                <div class="card">
+                    <h3 style="color:var(--green-500)">3</h3>
+                    <p class="muted">Comprender impactos socioculturales</p>
+                </div>
+                <div class="card">
+                    <h3 style="color:var(--green-500)">4</h3>
+                    <p class="muted">Proponer estrategias sostenibles mediante una página web</p>
+                </div>
+            </div>
+
+            <div class="info-box fade-in-section" style="margin-top:28px">
+                <h4 style="color:var(--green-500);margin-bottom:10px">Justificación</h4>
+                <p>En San Basilio de Palenque, la medicina tradicional no es solo una práctica curativa: es memoria viva. La pérdida de estas plantas pone en riesgo la salud y el conocimiento comunitario. Conservar el entorno natural es proteger la memoria y la cultura palenquera.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="estrategias">
+        <div class="container">
+            <h1 class="section-title fade-in-section">Estrategias Sostenibles Propuestas</h1>
+            <p class="muted fade-in-section">Acciones participativas para recuperar la disponibilidad de plantas medicinales y fortalecer los saberes ancestrales.</p>
+            
+            <div class="grid fade-in-section">
+                <!-- (NUEVO) Iconos temáticos añadidos a las estrategias -->
+                <div class="card">
+                    <h3>🌱 Huertos y viveros etnobotánicos</h3>
+                    <p class="muted">Establecimiento de huertos comunitarios y escolares para cultivo y multiplicación de plantas medicinales nativas.</p>
+                </div>
+                <div class="card">
+                    <h3>🧑‍🏫 Educación ambiental intercultural</h3>
+                    <p class="muted">Talleres y rutas de aprendizaje impartidos por sabedores tradicionales, materiales bilingües y formación práctica.</p>
+                </div>
+                <div class="card">
+                    <h3>🔍 Monitoreo participativo y restauración</h3>
+                    <p class="muted">Programas de seguimiento de biodiversidad, protección de cuencas y reforestación con especies nativas.</p>
+                </div>
+                <div class="card">
+                    <h3>🎞️ Documentación y bancos de saberes</h3>
+                    <p class="muted">Registro audiovisual, fichas etnobotánicas y protocolos de consentimiento informado para la protección del conocimiento.</p>
+                </div>
+            </div>
+            
+            <div class="card fade-in-section" style="margin-top:18px">
+                <h3 style="color:var(--green-500);margin-top:0">Vinculación institucional</h3>
+                <p class="muted">Articulación con universidades, IDEAM y entidades locales para apoyo técnico, financiación y reconocimiento cultural.</p>
+            </div>
+
+            <h3 class="section-title fade-in-section" style="color:var(--green-500);margin:28px 0 18px">Recomendaciones</h3>
+            <div class="grid fade-in-section">
+                <div class="card" style="text-align:center">
+                    <h3 style="font-size:2rem;margin:0 0 10px; display: block; text-align: center;">🌱</h3>
+                    <p class="muted">Crear huertos comunitarios y viveros escolares</p>
+                </div>
+                <div class="card" style="text-align:center">
+                    <h3 style="font-size:2rem;margin:0 0 10px; display: block; text-align: center;">🌾</h3>
+                    <p class="muted">Promover prácticas agrícolas sostenibles</p>
+                </div>
+                <div class="card" style="text-align:center">
+                    <h3 style="font-size:2rem;margin:0 0 10px; display: block; text-align: center;">📚</h3>
+                    <p class="muted">Fortalecer la educación ambiental y cultural</p>
+                </div>
+                <div class="card" style="text-align:center">
+                    <h3 style="font-size:2rem;margin:0 0 10px; display: block; text-align: center;">💻</h3>
+                    <p class="muted">Difundir el conocimiento ancestral a través de medios digitales</p>
+                </div>
+            </div>
+            
+            <div class="fade-in-section" style="margin-top:28px;text-align:center">
+                <a href="#galeria" class='btn'>Ver galería</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="participa">
+        <div class="container">
+            <h1 class="section-title fade-in-section">Participa en la Conservación</h1>
+            <p class="muted fade-in-section">Formas concretas de involucrarte: voluntariados, talleres, observatorio comunitario y difusión.</p>
+            
+            <div class="grid fade-in-section">
+                <div class="card">
+                    <h3 style="margin-top:0;color:var(--green-500)">Voluntariado</h3>
+                    <p class="muted">Jornadas de siembra y limpieza de fuentes hídricas.</p>
+                    <a href="#contacto" class='btn' style='margin-top:12px'>Quiero unirme</a>
+                </div>
+                <div class="card">
+                    <h3 style="margin-top:0;color:var(--green-500)">Talleres intergeneracionales</h3>
+                    <p class="muted">Sesiones donde las sabedoras transmiten prácticas a jóvenes.</p>
+                    <a href="#galeria" class='btn btn-secondary' style='margin-top:12px'>Ver talleres</a>
+                </div>
+                <div class="card">
+                    <h3 style="margin-top:0;color:var(--green-500)">Observatorio comunitario</h3>
+                    <p class="muted">Registro participativo de indicadores ambientales.</p>
+                    <a href="#estrategias" class='btn' style='margin-top:12px'>Ver estrategias</a>
+                </div>
+                <div class="card">
+                    <h3 style="margin-top:0;color:var(--green-500)">Difusión</h3>
+                    <p class="muted">Comparte esta iniciativa para crear conciencia.</p>
+                    <button class='btn' id="share-button" style='margin-top:12px;background:var(--green-400)'>Compartir</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="galeria">
+        <div class="container">
+            <h1 class="section-title fade-in-section">Galería Biocultural</h1>
+            <p class="muted fade-in-section">Imágenes representativas del territorio y las prácticas tradicionales.</p>
+            
+            <div class="grid fade-in-section" style="margin-top:28px">
+                
+                <!-- (CORREGIDO) Galería actualizada, con descripciones e imágenes correctas -->
+                <div class="card gallery-item" style="padding:0;" 
+                     data-tooltip="Monumento a Benkos Biohó, líder cimarrón y fundador de San Basilio de Palenque. Esta estatua en la plaza principal honra su lucha por la libertad, siendo un símbolo de resistencia y orgullo para la primera comunidad africana libre de América.">
+                    <img src="https://media-cdn.tripadvisor.com/media/photo-c/1280x250/12/65/0d/0c/monumento-a-benkos-bioho.jpg" alt="Monumento a Benkos Biohó">
+                    <div style="padding:12px">
+                        <h4 style="margin:0;color:var(--green-500)">Monumento a Benkos Biohó</h4>
+                    </div>
+                </div>
+                
+                <div class="card gallery-item" style="padding:0;" 
+                     data-tooltip="Las Palenqueras son un ícono cultural de Colombia. Con sus trajes coloridos y poncheras llenas de frutas tropicales, representan la herencia africana, la alegría y la resiliencia económica de la mujer palenquera.">
+                    <img src="https://colombia.co/sites/default/files/marca-pais/media/images/palenqueras-con-frutas.webp" alt="Palenqueras con frutas">
+                    <div style="padding:12px">
+                        <h4 style="margin:0;color:var(--green-500)">Palenqueras</h4>
+                    </div>
+                </div>
+                
+                <div class="card gallery-item" style="padding:0;" 
+                     data-tooltip="Una calle en San Basilio de Palenque, un corregimiento declarado Obra Maestra del Patrimonio Oral e Inmaterial de la Humanidad por la UNESCO. Sus casas coloridas reflejan la vibrante vida comunitaria.">
+                    <img src="https://www.shutterstock.com/image-photo/san-basilio-de-palenque-colombia-260nw-639291991.jpg" alt="Vida en San Basilio de Palenque">
+                    <div style="padding:12px">
+                        <h4 style="margin:0;color:var(--green-500)">Vida en Palenque</h4>
+                    </div>
+                </div>
+
+                <!-- (NUEVA IMAGEN) Reemplaza al Templo Maya -->
+                <div class="card gallery-item" style="padding:0;" 
+                     data-tooltip="Los tambores (pechiche, alegre, llamador) son el corazón de la música palenquera. Se usan en rituales como el 'lumbalú' para honrar a los ancestros y son fundamentales en la transmisión de la cultura y la historia oral.">
+                    <img src="https://images.unsplash.com/photo-1682309836938-e60555aed0d6?ixlib=rb-4.0.3&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=800&fit=max" alt="Tambores de Palenque">
+                    <div style="padding:12px">
+                        <h4 style="margin:0;color:var(--green-500)">Tambores Ancestrales</h4>
+                    </div>
+                </div>
+
+                <!-- (NUEVA IMAGEN) Reemplaza a la de Usiacurí -->
+                <div class="card gallery-item" style="padding:0;" 
+                     data-tooltip="Vista de la plaza principal de Palenque, un lugar de encuentro comunitario. El territorio, enclavado en los Montes de María, es un ecosistema de bosque seco tropical, clave para las plantas medicinales.">
+                    <img src="https://images.unsplash.com/photo-1628178652201-11d278c660c0?ixlib=rb-4.0.3&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=800&fit=max" alt="Paisaje de Palenque">
+                    <div style="padding:12px">
+                        <h4 style="margin:0;color:var(--green-500)">Paisaje y Comunidad</h4>
+                    </div>
+                </div>
+            </div>
+            
+            <p class="muted fade-in-section" style="margin-top:28px;text-align:center">Las imágenes muestran la riqueza biocultural del territorio y la importancia de su conservación.</p>
+        </div>
+    </section>
+
+    <section id="contacto">
+        <div class="container">
+            <h1 class="section-title fade-in-section">Contacto</h1>
+            <p class="muted fade-in-section">Para colaborar o solicitar apoyo técnico, completa el formulario.</p>
+            
+            <div id="contact-grid" class="fade-in-section" style="margin-top:28px;display:grid;grid-template-columns:1fr 320px;gap:18px">
+                
+                <form class="card" id="contact-form">
+                    <input name="nombre" placeholder="Tu nombre completo" required>
+                    <!-- Campo "asunto" eliminado para un mensaje más natural -->
+                    <textarea name="mensaje" rows="6" placeholder="Cuéntanos cómo te gustaría colaborar o cuál es tu consulta." required></textarea>
+                    <button class="btn" type="submit">Enviar mensaje por WhatsApp</button>
+                </form>
+                
+                <div class="card">
+                    <h3 style="margin-top:0;color:var(--green-500)">Información</h3>
+                    <p class="muted">Proyecto educativo Colegio El Encanto (2025)<br>San Basilio de Palenque, Bolívar, Colombia</p>
+                    
+                    <p style="margin-top:12px"><strong>WhatsApp:</strong> +57 313 518 8891</p>
+                    <a href="https://goo.gl/maps/" target="_blank" style="margin-top:12px;display:inline-block">Ver ubicación →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div style="font-weight:800">Proyecto Educativo — Colegio El Encanto, Lorica (2025)</div>
+        </div>
+    </footer>
+
+    <div id="gallery-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <button class="modal-close" id="modal-close-btn">&times;</button>
+            <img src="" alt="Imagen de galería ampliada" id="modal-img">
+            <p id="modal-caption">Descripción de la imagen aquí.</p>
+        </div>
+    </div>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // --- VARIABLES GLOBALES ---
+            const navLinksContainer = document.getElementById('nav-links');
+            const menuToggle = document.getElementById('menu-toggle');
+            const contactForm = document.getElementById('contact-form');
+            
+            const galleryModal = document.getElementById('gallery-modal');
+            const modalImg = document.getElementById('modal-img');
+            const modalCaption = document.getElementById('modal-caption');
+            const modalCloseBtn = document.getElementById('modal-close-btn');
+            const galleryItems = document.querySelectorAll('.gallery-item');
+
+
+            // --- MANEJO DEL MENÚ MÓVIL ---
+            function toggleMenu() {
+                navLinksContainer.classList.toggle('active');
+                menuToggle.classList.toggle('active');
+                
+                const isExpanded = navLinksContainer.classList.contains('active');
+                menuToggle.setAttribute('aria-expanded', isExpanded);
+            }
+
+            // --- MANEJO DEL FORMULARIO A WHATSAPP (Mensaje más natural) ---
+            function handleWhatsAppSubmit(event) {
+                event.preventDefault(); 
+                
+                const form = event.target;
+                const nombre = form.nombre.value;
+                const mensaje = form.mensaje.value;
+                
+                const telefono = '573135188891';
+
+                // (NUEVO) Mensaje de WhatsApp más natural y fluido
+                let texto = `¡Hola! Te escribo desde la web "Conservar Palenque".\n\n`;
+                texto += `Mi nombre es ${nombre} y me gustaría conversar sobre lo siguiente:\n\n`;
+                texto += `${mensaje}\n\n`; // El mensaje del usuario sin comillas ni etiquetas
+                texto += `¡Quedo atento!`;
+
+                const textoCodificado = encodeURIComponent(texto);
+                const urlWhatsApp = `https://wa.me/${telefono}?text=${textoCodificado}`;
+
+                window.open(urlWhatsApp, '_blank');
+                
+                form.reset();
+            }
+
+            // --- MANEJO DEL BOTÓN DE COMPARTIR ---
+            const shareButton = document.getElementById('share-button');
+
+            if (shareButton) {
+                shareButton.addEventListener('click', async () => {
+                    const shareData = {
+                        title: 'Conservar Palenque',
+                        text: 'Ayuda a proteger la biodiversidad y los saberes ancestrales de San Basilio de Palenque.',
+                        url: window.location.href 
+                    };
+
+                    if (navigator.share) {
+                        try {
+                            await navigator.share(shareData);
+                            console.log('Contenido compartido exitosamente');
+                        } catch (err) {
+                            console.error('Error al compartir:', err);
+                        }
+                    } else {
+                        alert('¡Gracias por compartir! Copia el enlace de esta página para compartirlo en tus redes.\n#ConservarPalenque');
+                    }
+                });
+            }
+
+            // --- MANEJO DEL MODAL DE GALERÍA ---
+            
+            function openModal(imgSrc, caption) {
+                modalImg.src = imgSrc;
+                modalCaption.textContent = caption;
+                galleryModal.style.display = 'flex'; 
+            }
+
+            function closeModal() {
+                galleryModal.style.display = 'none';
+            }
+
+            galleryItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    const img = item.querySelector('img');
+                    const caption = item.getAttribute('data-tooltip'); 
+                    openModal(img.src, caption);
+                });
+            });
+
+            modalCloseBtn.addEventListener('click', closeModal);
+            galleryModal.addEventListener('click', (event) => {
+                if (event.target === galleryModal) {
+                    closeModal();
+                }
+            });
+
+
+            // --- ASIGNACIÓN DE EVENTOS ---
+
+            // 1. Cerrar el menú móvil al hacer clic en un enlace
+            const navLinks = document.querySelectorAll('#nav-links a');
+            navLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    if (navLinksContainer.classList.contains('active')) {
+                        toggleMenu();
+                    }
+                });
+            });
+
+            // 2. Manejo del menú móvil
+            menuToggle.addEventListener('click', toggleMenu);
+
+            // 3. Manejo del formulario (ahora a WhatsApp)
+            contactForm.addEventListener('submit', handleWhatsAppSubmit);
+
+            // 4. (Opcional) Cerrar menú al hacer clic fuera de él
+            document.addEventListener('click', (event) => {
+                const header = document.querySelector('header');
+                if (!header.contains(event.target) && navLinksContainer.classList.contains('active')) {
+                    toggleMenu(); 
+                }
+            });
+
+            // (NUEVO) --- OBSERVADOR PARA ANIMACIONES DE SCROLL ---
+            const sections = document.querySelectorAll('.fade-in-section');
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                rootMargin: '0px 0px -50px 0px' // Se activa un poco antes de que llegue al fondo
+            });
+
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+
+        });
+    </script>
+</body>
+</html>
